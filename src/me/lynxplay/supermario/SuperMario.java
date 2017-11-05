@@ -49,7 +49,7 @@ public class SuperMario extends VoidGame {
         superMario.getKeyboard().registerKeyEvent(KeyEvent.VK_D, "debug_move_d", () -> goomba.move(goomba.getMaxSpeed(), 0));
         superMario.getKeyboard().registerKeyEvent(KeyEvent.VK_SPACE, "debug_spave", () -> {
             if(goomba.isOnGround()) {
-                goomba.move(0 , .5);
+                goomba.move(0 , 10);
             }
         });
 
