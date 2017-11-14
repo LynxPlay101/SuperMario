@@ -18,7 +18,7 @@ public class WorldRender implements CanvasLayer {
      */
     @Override
     public void render(VoidCanvas screen) {
-        world.getBlocks().forEach(b -> screen.drawImage(b.getLocation(), b.getMaterial().getTexture()));
-        world.getEntities().forEach(e -> screen.drawImage(e.getLocation() , e.getGraphics().getDisplayedTexture()));
+        world.getBlocks().forEach(b -> screen.drawImage(b.getBottomConrner(), b.getMaterial().getTexture()));
+        world.getEntities().forEach(e -> screen.drawImage(e.getBottomConrner(), e.getGraphics().getDisplayedTexture()));
     }
 }

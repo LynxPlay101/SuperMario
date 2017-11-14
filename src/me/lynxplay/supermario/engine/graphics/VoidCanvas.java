@@ -82,6 +82,10 @@ public class VoidCanvas extends Canvas {
         this.displayedLocation.add(x, -y);
     }
 
+    public void teleportCamera(double x, double y) {
+        this.displayedLocation = new Location(x, y);
+    }
+
     /**
      * Returns if the location is displayed right now
      *

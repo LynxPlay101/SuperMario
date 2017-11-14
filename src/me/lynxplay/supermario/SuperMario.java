@@ -24,32 +24,33 @@ public class SuperMario extends VoidGame {
 
         superMario.setWorld(world.get());
 
-        Goomba goomba = new Goomba(new Location(0, 1));
+        Goomba goomba = new Goomba(new Location(0, 0));
         superMario.getWorld().spawn(goomba);
 
         superMario.getCanvas().addLayer((l) -> {
             l.getDrawnGraphics().setColor(Color.RED);
             superMario.getWorld().getEntities().forEach(e -> {
-                Location converted = l.convertToScreen(e.getLocation());
+                Location converted = l.convertToScreen(e.getBottomConrner());
                 l.getDrawnGraphics().drawRect(converted.getBlockX(), converted.getBlockY(), (int) (e.getHitbox().getX() * LOCATION_TO_PIXEL), (int) (e.getHitbox().getY() * LOCATION_TO_PIXEL));
 
-                Location locBelow = e.getBlockBelow();
-
-                Block block = locBelow.toBlock();
-                Location screen = l.convertToScreen(block.getLocation().clone());
+                Block block = e.getBlockBelow();
+                Location screen = l.convertToScreen(block.getBottomConrner().clone());
                 l.getDrawnGraphics().drawRect(screen.getBlockX(), screen.getBlockY(), (int) (block.getHitbox().getX() * LOCATION_TO_PIXEL), (int) (block.getHitbox().getY() * LOCATION_TO_PIXEL));
 
-                Location center = l.convertToScreen(e.getCenter());
-                l.getDrawnGraphics().drawLine(center.getBlockX(), center.getBlockY(), 0, 0);
-            });
+                l.getDrawnGraphics().drawString(block.getLocation().toString(), 0, 50);
+                l.getDrawnGraphics().drawString(e.getLocation().toString(), 0, 70);
+                l.getDrawnGraphics().drawString(e.getVector().toString(), 0, 90);
+                l.getDrawnGraphics().drawString(String.valueOf(e.isOnGround()), 0, 110);
 
+                getInstance().getCanvas().teleportCamera(e.getLocation().getX(), 0);
+            });
         });
 
         superMario.getKeyboard().registerKeyEvent(KeyEvent.VK_A, "debug_move_a", () -> goomba.move(-goomba.getMaxSpeed(), 0));
         superMario.getKeyboard().registerKeyEvent(KeyEvent.VK_D, "debug_move_d", () -> goomba.move(goomba.getMaxSpeed(), 0));
         superMario.getKeyboard().registerKeyEvent(KeyEvent.VK_SPACE, "debug_spave", () -> {
-            if(goomba.isOnGround()) {
-                goomba.move(0 , 10);
+            if (goomba.isOnGround()) {
+                goomba.move(0, .25);
             }
         });
 

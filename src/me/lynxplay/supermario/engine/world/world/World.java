@@ -9,6 +9,7 @@ import me.lynxplay.supermario.engine.world.location.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class World {
@@ -46,6 +47,8 @@ public class World {
             } else {
                 vector.setY(Math.max(-.25, vector.getY() - e.getType().getData().getYReduction()));
             }
+
+            e.fixLocation();
         });
     }
 
@@ -69,7 +72,7 @@ public class World {
     public Block getBlockAt(Location location) {
         Location blockLocation = new Location(location.getBlockX(), location.getBlockY());
 
-        Optional<Block> block = blocks.stream().filter(b -> b.getLocation().equals(blockLocation)).findAny();
+        Optional<Block> block = blocks.stream().filter(b -> Objects.equals(blockLocation, b.getLocation())).findAny();
 
         if (!block.isPresent()) {
             Block newBlock = new Block(blockLocation, Material.AIR);

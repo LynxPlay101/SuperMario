@@ -8,7 +8,6 @@ import me.lynxplay.supermario.engine.world.location.Location;
 
 public class Block implements Collidable {
 
-    @Getter
     private Location location;
 
     @Getter
@@ -22,5 +21,30 @@ public class Block implements Collidable {
     @Override
     public Hitbox getHitbox() {
         return material.getHitbox();
+    }
+
+    /**
+     * Returns the bottom left cornor of the entity hitbox
+     *
+     * @return the location
+     */
+    @Override
+    public Location getBottomConrner() {
+        return getLocation();
+    }
+
+    /**
+     * Returns the upper right cornor of the entity hitbox
+     *
+     * @return the location
+     */
+    @Override
+    public Location getUpperConrner() {
+        return getLocation().add(getHitbox().getX(), getHitbox().getY());
+    }
+
+    @Override
+    public Location getLocation() {
+        return location.clone();
     }
 }

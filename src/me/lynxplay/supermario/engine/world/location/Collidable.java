@@ -12,28 +12,33 @@ public interface Collidable extends Locatable {
     Hitbox getHitbox();
 
     /**
-     * Returns the center if the entity calcualted due to its hitbox
-     *
-     * @return the center
-     */
-    default Location getCenter() {
-        return getLocation().clone().add(getHitbox().getX() / 2, -getHitbox().getY() / 2);
-    }
-
-    /**
      * Returns if the collidable is colliding
      *
      * @param other the object to hit
      * @return the result
      */
     default boolean isColliding(Collidable other) {
-        Location loc = other.getLocation();
+        Location loc = other.getBottomConrner();
+        Location thisLoc = getBottomConrner();
         Hitbox box = other.getHitbox();
 
-        return (loc.getX() + box.getX() > getLocation().getX() &&
-                loc.getY() - box.getY() < getLocation().getY() &&
-                loc.getX() < getLocation().getX() + getHitbox().getX() &&
-                loc.getY() > getLocation().getY() - getHitbox().getY());
+        return (loc.getX() + box.getX() > thisLoc.getX() &&
+                loc.getY() - box.getY() < thisLoc.getY() &&
+                loc.getX() < thisLoc.getX() + getHitbox().getX() &&
+                loc.getY() > thisLoc.getY() - getHitbox().getY());
     }
 
+    /**
+     * Returns the bottom left cornor of the entity hitbox
+     *
+     * @return the location
+     */
+    Location getBottomConrner();
+
+    /**
+     * Returns the upper right cornor of the entity hitbox
+     *
+     * @return the location
+     */
+    Location getUpperConrner();
 }

@@ -49,7 +49,7 @@ public class Location implements Collidable {
      * @return the block x
      */
     public int getBlockX() {
-        return (int) (x >= 0 ? x : x - 1);
+        return (int) (x % 1 == 0 ? x : (x >= 0 ? x : x - 1));
     }
 
     /**
@@ -58,7 +58,7 @@ public class Location implements Collidable {
      * @return the block y
      */
     public int getBlockY() {
-        return (int) (y >= 0 ? y : y - 1);
+        return (int) (y % 1 == 0 ? y : (y >= 0 ? y + 1 : y));
     }
 
     /**
@@ -200,7 +200,7 @@ public class Location implements Collidable {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Location) {
-            return ((Location) obj).getX() == getX() && ((Location) obj).getY() == y;
+            return ((Location) obj).getX() == getX() && ((Location) obj).getY() == getY();
         }
 
         return super.equals(obj);
@@ -214,5 +214,25 @@ public class Location implements Collidable {
     @Override
     public Hitbox getHitbox() {
         return box;
+    }
+
+    /**
+     * Returns the bottom left cornor of the entity hitbox
+     *
+     * @return the location
+     */
+    @Override
+    public Location getBottomConrner() {
+        return this;
+    }
+
+    /**
+     * Returns the upper right cornor of the entity hitbox
+     *
+     * @return the location
+     */
+    @Override
+    public Location getUpperConrner() {
+        return this;
     }
 }

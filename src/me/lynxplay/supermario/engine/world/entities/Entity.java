@@ -30,16 +30,35 @@ public class Entity implements Collidable {
         this.maxSpeed = type.getData().getMovementSpeed();
     }
 
+    /**
+     * Returns the bottom left cornor of the entity hitbox
+     *
+     * @return the location
+     */
+    @Override
+    public Location getBottomConrner() {
+        return getLocation().clone().add(-getHitbox().getX() / 2, getHitbox().getY());
+    }
+
+    /**
+     * Returns the upper right cornor of the entity hitbox
+     *
+     * @return the location
+     */
+    @Override
+    public Location getUpperConrner() {
+        return getLocation().clone().add(getHitbox().getX() / 2, 0);
+    }
 
     /**
      * Returns the next block below the entitiy
      *
      * @return the location of the block below
      */
-    public Location getBlockBelow() {
-        Location center = getCenter();
-        return new Location(center.getX(), location.getBlockY());
+    public Block getBlockBelow() {
+        return getLocation().clone().add(0, -1).toBlock();
     }
+
 
     /**
      * Returns if the entity is on the ground
@@ -47,8 +66,8 @@ public class Entity implements Collidable {
      * @return the if entity is on the ground
      */
     public boolean isOnGround() {
-        Block ground = getLocation().clone().subtract(0, -.05).toBlock();
-        return isColliding(ground) && ground.getMaterial().isSolid();
+        Block ground = getLocation().clone().subtract(0, .05).toBlock();
+        return ground.getMaterial().isSolid();
     }
 
     /**
@@ -90,4 +109,10 @@ public class Entity implements Collidable {
         vector.setY(vector.getY() + y);
     }
 
+    /**
+     * This methode will fix the entites location if it currently colliding with a block
+     */
+    public void fixLocation() {
+
+    }
 }
