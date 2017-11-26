@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <level name="level_1">
-    <backround>resources\textures\level_1\background.png</backround>
+    <backround>textures\level_1\background.png</backround>
     <blocks>
         <block location="-15;0" material="dirt_left"/>
         <block location="-15;2" material="dirt_left"/>

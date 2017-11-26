@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<entityTypeData typeID="goomba">
+    <hitbox x=".45" y=".6"/>
+    <movementSpeed>.15</movementSpeed>
+    <xReduction>0.05</xReduction>
+    <yReduction>0.02</yReduction>
+    <animationSet>
+        <entry>
+            <key>walking_left</key>
+            <value amount="6">
+                <source>textures\entities\goomba\goomba_walking_left.png</source>
+            </value>
+        </entry>
+    </animationSet>
+</entityTypeData>
