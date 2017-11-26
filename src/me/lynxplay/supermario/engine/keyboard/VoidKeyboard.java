@@ -10,7 +10,7 @@ public class VoidKeyboard {
 
     private final VoidCanvas parent;
 
-    private HashSet<Integer> pressedKeys = new HashSet<>();
+    private final HashSet<Integer> pressedKeys = new HashSet<>();
     private HashMap<Integer, HashMap<String, Runnable>> actions = new HashMap<>();
 
     public VoidKeyboard(VoidCanvas parent) {
@@ -40,7 +40,9 @@ public class VoidKeyboard {
     }
 
     public void executeEvents() {
-        new HashSet<>(pressedKeys).parallelStream().map(this::getKeyMap).map(HashMap::values).flatMap(Collection::stream).forEach(Runnable::run);
+        synchronized (pressedKeys) {
+            new HashSet<>(pressedKeys).parallelStream().map(this::getKeyMap).map(HashMap::values).flatMap(Collection::stream).forEach(Runnable::run);
+        }
     }
 
     /**

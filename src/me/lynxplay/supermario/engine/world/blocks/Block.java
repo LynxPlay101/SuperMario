@@ -47,4 +47,15 @@ public class Block implements Collidable {
     public Location getLocation() {
         return location.clone();
     }
+
+    /**
+     * Returns the block from the block face
+     *
+     * @param face the face
+     * @return the found block
+     */
+    public Block getRelative(BlockFace face) {
+        return face.modifiy(getLocation()).toBlock();
+    }
+
 }

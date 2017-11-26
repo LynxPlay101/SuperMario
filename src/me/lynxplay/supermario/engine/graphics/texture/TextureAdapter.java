@@ -1,8 +1,9 @@
 package me.lynxplay.supermario.engine.graphics.texture;
 
+import me.lynxplay.supermario.engine.util.FileLoader;
+
 import javax.xml.bind.ValidationEventHandler;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.io.File;
 
 public class TextureAdapter extends XmlAdapter<String, Texture> {
 
@@ -15,7 +16,7 @@ public class TextureAdapter extends XmlAdapter<String, Texture> {
      */
     @Override
     public Texture unmarshal(String string) throws Exception {
-        return new Texture(new File(string));
+        return new Texture(FileLoader.getFile(string));
     }
 
     /**

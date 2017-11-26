@@ -2,16 +2,19 @@ package me.lynxplay.supermario.engine.world.world.template;
 
 import lombok.Getter;
 import lombok.Setter;
+import me.lynxplay.supermario.engine.graphics.texture.UnscaledTexture;
+import me.lynxplay.supermario.engine.graphics.texture.UnscaledTextureAdapter;
+import me.lynxplay.supermario.engine.util.Template;
 import me.lynxplay.supermario.engine.util.handler.Identifiable;
 import me.lynxplay.supermario.engine.world.blocks.template.BlockTemplate;
 import me.lynxplay.supermario.engine.world.entities.template.EntityTemplate;
-import me.lynxplay.supermario.engine.util.Template;
 import me.lynxplay.supermario.engine.world.world.World;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,6 +35,10 @@ public class WorldTemplate implements Template<World>, Identifiable {
     @XmlElementWrapper(name = "entities")
     private List<EntityTemplate> entityTemplates = new ArrayList<>();
 
+    @XmlElement(name = "backround")
+    @XmlJavaTypeAdapter(UnscaledTextureAdapter.class)
+    private UnscaledTexture background;
+
     /**
      * Returns the loaded block templates
      *
@@ -48,7 +55,7 @@ public class WorldTemplate implements Template<World>, Identifiable {
      */
     @Override
     public World build() {
-        World world = new World(blockTemplates.stream().map(BlockTemplate::build).collect(Collectors.toList()));
+        World world = new World(blockTemplates.stream().map(BlockTemplate::build).collect(Collectors.toList()) , background);
 
         entityTemplates.stream().map(EntityTemplate::build).forEach(world::spawn);
 

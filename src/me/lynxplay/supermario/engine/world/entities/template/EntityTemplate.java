@@ -37,4 +37,5 @@ public class EntityTemplate implements Template<Entity> {
     public Entity build() {
         return type.createNewInstance(location);
     }
+
 }

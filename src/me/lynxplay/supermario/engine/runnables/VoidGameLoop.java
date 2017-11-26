@@ -5,7 +5,7 @@ import me.lynxplay.supermario.engine.world.world.World;
 
 public class VoidGameLoop implements Runnable {
 
-    public static final int MAX_FRAMES = 60;
+    public static final int MAX_FRAMES = 30;
     public static final int UPDATES_PER_SEK = 60;
 
     private boolean running;
@@ -30,8 +30,8 @@ public class VoidGameLoop implements Runnable {
 
             long now = System.nanoTime();
 
-            deltaUpdate += (now - lastTime) / nanoSecondsForUpdate;
-            deltaFrames += (now - lastTime) / nanoSecondsFroRender;
+            if (deltaUpdate < UPDATES_PER_SEK) deltaUpdate += (now - lastTime) / nanoSecondsForUpdate;
+            if (deltaFrames < MAX_FRAMES) deltaFrames += (now - lastTime) / nanoSecondsFroRender;
 
             lastTime = now;
 
@@ -75,7 +75,7 @@ public class VoidGameLoop implements Runnable {
         game.getKeyboard().executeEvents();
 
         World world = game.getWorld();
-        if(world != null) {
+        if (world != null) {
             world.tick();
         }
     }

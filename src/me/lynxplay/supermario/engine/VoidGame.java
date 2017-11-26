@@ -6,6 +6,7 @@ import me.lynxplay.supermario.engine.graphics.VoidCanvas;
 import me.lynxplay.supermario.engine.keyboard.VoidKeyboard;
 import me.lynxplay.supermario.engine.loader.JAXBLoader;
 import me.lynxplay.supermario.engine.runnables.VoidGameLoop;
+import me.lynxplay.supermario.engine.util.FileLoader;
 import me.lynxplay.supermario.engine.world.blocks.material.MaterialAdapter;
 import me.lynxplay.supermario.engine.world.blocks.material.MaterialManager;
 import me.lynxplay.supermario.engine.world.entities.type.EntityTypeAdapter;
@@ -17,7 +18,6 @@ import me.lynxplay.supermario.engine.world.world.template.WorldTemplateManager;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 @Getter
 public class VoidGame {
@@ -45,9 +45,9 @@ public class VoidGame {
 
         this.loader = new JAXBLoader();
 
-        this.materialManager = new MaterialManager(new File("resources/materials"), getLoader());
-        this.worldTemplateManager = new WorldTemplateManager(new File("resources/levels"), getLoader());
-        this.typeDataManager = new EntityTypeDataManager(new File("resources/entities") , getLoader());
+        this.materialManager = new MaterialManager(FileLoader.getFile("materials/"), getLoader());
+        this.worldTemplateManager = new WorldTemplateManager(FileLoader.getFile("levels/"), getLoader());
+        this.typeDataManager = new EntityTypeDataManager(FileLoader.getFile("entities/") , getLoader());
 
         loader.registerAdapter(new MaterialAdapter(materialManager));
         loader.registerAdapter(new EntityTypeAdapter());
@@ -79,7 +79,7 @@ public class VoidGame {
     /**
      * Stops the game
      */
-    private void stop() {
+    public void stop() {
         this.frame.dispose();
         this.loop.stop();
     }

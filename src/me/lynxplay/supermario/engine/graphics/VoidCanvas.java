@@ -7,11 +7,14 @@ import me.lynxplay.supermario.engine.world.location.Location;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 import java.util.Stack;
 
 public class VoidCanvas extends Canvas {
 
-    public static final double LOCATION_TO_PIXEL = 64;
+    public static double LOCATION_TO_PIXEL = 64;
+
+    private static final int DEFAULT_WIDTH = 1920, DEFAULT_HEIGHT = 1080;
 
     private JFrame parent;
 
@@ -26,6 +29,8 @@ public class VoidCanvas extends Canvas {
 
     /**
      * Creates a new screen
+     *
+     * @param parent the jFrame to be displayed on
      */
     public VoidCanvas(JFrame parent) {
         this.parent = parent;
@@ -35,6 +40,8 @@ public class VoidCanvas extends Canvas {
         this.center = new Location(getSize().getWidth() / 2D, getSize().getHeight() / 2D);
 
         parent.add(this);
+
+        LOCATION_TO_PIXEL = getWidthModifier() * 64;
     }
 
     /**
@@ -131,8 +138,6 @@ public class VoidCanvas extends Canvas {
      * Renders every registered layer on the screen
      */
     public void render() {
-        if (!this.isDisplayable()) return;
-
         buffer = getBufferStrategy();
 
         if (buffer == null) {
@@ -141,12 +146,14 @@ public class VoidCanvas extends Canvas {
         }
 
         try {
+            if (!this.isDisplayable()) return;
             drawnGraphics = (Graphics2D) buffer.getDrawGraphics();
             drawnGraphics.setColor(Color.BLACK);
             drawnGraphics.fillRect(0, 0, getWidth(), getHeight());
 
             layers.forEach(l -> l.render(this));
 
+            if (!this.isDisplayable()) return;
             buffer.show();
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,5 +167,59 @@ public class VoidCanvas extends Canvas {
      */
     public Graphics2D getDrawnGraphics() {
         return drawnGraphics;
+    }
+
+    /**
+     * Scales an image to the current screen size
+     *
+     * @param image the image
+     * @return the scaled image
+     */
+    public static BufferedImage scale(BufferedImage image) {
+        double widthModifier = getWidthModifier();
+        double heigthModifier = getHeigthModifier();
+
+        return scale(image, widthModifier, heigthModifier);
+    }
+
+    /**
+     * Scales the image
+     *
+     * @param image          the image
+     * @param widthModifier  the widthModifier
+     * @param heigthModifier the heigthModifier
+     * @return the scaled image
+     */
+    public static BufferedImage scale(BufferedImage image, double widthModifier, double heigthModifier) {
+        int width = (int) (image.getWidth() * widthModifier + .5);
+        int heigth = (int) (image.getHeight() * heigthModifier + .5);
+
+        BufferedImage scaledImage = new BufferedImage(width, heigth, image.getType());
+        Graphics2D graphics2D = scaledImage.createGraphics();
+        graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.drawImage(image, 0, 0, width, heigth, null);
+        graphics2D.dispose();
+
+        return scaledImage;
+    }
+
+    /**
+     * Returns the height modifier
+     *
+     * @return the modifier
+     */
+    public static double getHeigthModifier() {
+        return Toolkit.getDefaultToolkit().getScreenSize().getHeight() / DEFAULT_HEIGHT;
+    }
+
+    /**
+     * Returns the width modifier
+     *
+     * @return the modifier
+     */
+    public static double getWidthModifier() {
+        return Toolkit.getDefaultToolkit().getScreenSize().getWidth() / DEFAULT_WIDTH;
     }
 }

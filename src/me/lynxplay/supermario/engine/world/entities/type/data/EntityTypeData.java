@@ -60,16 +60,16 @@ public class EntityTypeData implements Identifiable {
     /**
      * Returns the reduction of the entities velocitiy on the x axis
      *
-     * @return
+     * @return the x reduction
      */
     public double getXReduction() {
         return xReduction;
     }
 
     /**
-     * Returns the reduction of the entities velocitiy on the x axis
+     * Returns the reduction of the entities velocitiy on the y axis
      *
-     * @return
+     * @return the y reduction
      */
     public double getYReduction() {
         return yReduction;

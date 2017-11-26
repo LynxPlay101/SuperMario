@@ -25,7 +25,7 @@ public class Entity implements Collidable {
     public Entity(Location location, EntityType type) {
         this.location = location;
         this.type = type;
-        this.graphics = new EntityGraphics(type.getData().getAnimationSet());
+        this.graphics = new EntityGraphics(this, type.getData().getAnimationSet());
         this.hitbox = type.getData().getHitbox();
         this.maxSpeed = type.getData().getMovementSpeed();
     }
@@ -114,5 +114,12 @@ public class Entity implements Collidable {
      */
     public void fixLocation() {
 
+    }
+
+    /**
+     * Kills the entity
+     */
+    public void kill() {
+        this.dead = true;
     }
 }

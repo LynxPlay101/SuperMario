@@ -1,7 +1,10 @@
 package me.lynxplay.supermario.engine.world.world;
 
 import lombok.Getter;
+import me.lynxplay.supermario.engine.graphics.VoidCanvas;
+import me.lynxplay.supermario.engine.graphics.texture.UnscaledTexture;
 import me.lynxplay.supermario.engine.world.blocks.Block;
+import me.lynxplay.supermario.engine.world.blocks.BlockFace;
 import me.lynxplay.supermario.engine.world.blocks.material.Material;
 import me.lynxplay.supermario.engine.world.entities.Entity;
 import me.lynxplay.supermario.engine.world.location.Location;
@@ -11,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public class World {
 
@@ -18,10 +22,15 @@ public class World {
     private final List<Block> blocks;
 
     @Getter
+    private UnscaledTexture background;
+
+    @Getter
     private final List<Entity> entities = new ArrayList<>();
 
-    public World(List<Block> blocks) {
+    public World(List<Block> blocks, UnscaledTexture background) {
         this.blocks = blocks;
+        this.background = background;
+        this.background.setImage(VoidCanvas.scale(this.background.getImage() ,  VoidCanvas.getWidthModifier() , VoidCanvas.getHeigthModifier()));
     }
 
     /**
@@ -30,7 +39,12 @@ public class World {
     public void tick() {
         entities.removeIf(Entity::isDead);
         entities.forEach(e -> {
+
+            Block block = e.getLocation().toBlock();
+
             Vector vector = e.getVector();
+            Vector backup = vector.clone();
+
             e.getLocation().add(vector);
 
             double x = vector.getX();
@@ -38,6 +52,13 @@ public class World {
                 vector.setX(0);
             } else {
                 vector.setX(x - (x > 0 ? e.getType().getData().getXReduction() : -e.getType().getData().getXReduction()));
+                if (vector.getX() > 0) {
+                    Block relative = block.getRelative(BlockFace.RIGHT);
+                    if (relative.getMaterial().isSolid() && relative.isColliding(e)) vector.setX(0);
+                } else {
+                    Block relative = block.getRelative(BlockFace.LEFT);
+                    if (relative.getMaterial().isSolid() && relative.isColliding(e)) vector.setX(0);
+                }
             }
 
             if (e.isOnGround()) {
@@ -45,10 +66,19 @@ public class World {
                     vector.setY(0);
                 }
             } else {
-                vector.setY(Math.max(-.25, vector.getY() - e.getType().getData().getYReduction()));
+                if (Stream.of(BlockFace.UP, BlockFace.UP_LEFT, BlockFace.UP_RIGHT)
+                        .map(block::getRelative)
+                        .anyMatch(b -> b.isColliding(e) && b.getMaterial().isSolid()) && vector.getY() > 0) {
+                    vector.setY(0);
+                } else {
+                    vector.setY(Math.max(-.25, vector.getY() - e.getType().getData().getYReduction()));
+                }
             }
 
-            e.fixLocation();
+            e.getLocation().add(backup.multiply(-1));
+            e.getLocation().add(vector);
+
+            if (e.getLocation().getY() < -50) e.kill();
         });
     }
 
